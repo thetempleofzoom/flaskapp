@@ -9,7 +9,7 @@
     <body>
         <div class="container">
             <h1 class="mt-4 mb-4">Job application form</h1>
-            <form>
+            <form method="post">
                 <div class="form-group mb-4">
                     <label for ="firstname">First Name:</label>
                     <input class="form-control" type="text" id="firstname" name="first" required>
@@ -31,20 +31,33 @@
                     <br>
                     <!--div id groups radio buttons with same name as div id-->
                     <div class="btn-group-vertical" id="occupation">
-                        <input class="btn-check form-control" type="radio" id="employed" name="occupation" required>
+                        <input class="btn-check form-control" type="radio" id="employed" name="occupation"
+                               value="employed" required>
                         <label class="btn btn-outline-secondary" for ="employed">Employed</label>
 
-                        <input class="btn-check form-control" type="radio" id="unemployed" name="occupation" required>
+                        <input class="btn-check form-control" type="radio" id="unemployed" name="occupation"
+                               value="unemployed" required>
                         <label class="btn btn-outline-secondary" for ="unemployed">Unemployed</label>
 
-                        <input class="btn-check form-control" type="radio" id="selfemployed" name="occupation" required>
+                        <input class="btn-check form-control" type="radio" id="selfemployed" name="occupation"
+                               value="selfemployed" required>
                         <label class="btn btn-outline-secondary" for ="selfemployed">Self-employed</label>
 
-                        <input class="btn-check form-control" type="radio" id="student" name="occupation" required>
+                        <input class="btn-check form-control" type="radio" id="student" name="occupation"
+                               value="student" required>
                         <label class="btn btn-outline-secondary" for ="student">Student</label>
                     </div>
                 </div>
-                <button class="btn btn-secondary mb-4" type="button">Submit</button>
+                <button class="btn btn-secondary mb-4" type="submit">Submit</button>
+                <!--jinja2 code, flash method of flask used for message-->
+                {% if get_flashed_messages() %}
+                {% for message in get_flashed_messages() %}
+                {# to print variable in output #}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
             </form>
         </div>
         <!--makes notification of email sent possible-->
