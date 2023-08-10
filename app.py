@@ -1,13 +1,21 @@
 from flask import Flask, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_mail import Mail, Message
+import pws
 
 # instance of flask class
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "password"
+app.config["SECRET_KEY"] = pws.secret_key
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+app.config["MAIL_SERVER"] = pws.mail_server
+app.config["MAIL_PORT"] = pws.mail_port
+app.config["MAIL_USE_SSL"] = True
+app.config["MAIL_USERNAME"] = pws.username
+app.config["MAIL_PASSWORD"] = pws.password
 
+mail = Mail(app)
 db = SQLAlchemy(app)
 
 
@@ -39,6 +47,18 @@ def index():
         db.session.add(form)
         db.session.commit()
 
+        #send email
+        msg_body = f'''Dear {firstname}, \n Thank you for your online submission on {date_obj.strftime("%d/%m/%Y")}. 
+        You have provided the following info:\n
+        Name: {firstname} {lastname} \n
+        Email: {email} \n
+        Occupational Status: {occupation}
+        '''
+        message = Message(subject="New form submission", sender=app.config["MAIL_USERNAME"],
+                          recipients=[email], body=msg_body)
+        mail.send(message)
+
+        #show 'submitted' message
         flash(f"{firstname}, form successfully submitted!")
         
 
